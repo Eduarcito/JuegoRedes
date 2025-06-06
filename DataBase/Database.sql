@@ -1,6 +1,5 @@
 -- Script para crear la base de datos de Ruleta Americana
 -- Creación de la base de datos
-DROP DATABASE ruleta_americana;
 CREATE DATABASE IF NOT EXISTS ruleta_americana;
 USE ruleta_americana;
 
@@ -192,109 +191,36 @@ BEGIN
 END //
 DELIMITER ;
 
--- Modificaciones a la base de datos para soportar diferentes tipos de apuestas
+-- Ejemplo de datos de prueba
+-- Insertar un usuario de prueba
+CALL sp_registrar_usuario('JuanPerez', 'juan@ejemplo.com', '$2y$10$abc123hash...');
 
-USE ruleta_americana;
+-- Iniciar una partida
+SET @partida_id = 0;
+CALL sp_iniciar_partida(1, @partida_id);
 
--- Primero, modificar la tabla de Apuestas para agregar tipo de apuesta
-ALTER TABLE Apuestas 
-ADD COLUMN tipo_apuesta VARCHAR(20) NOT NULL DEFAULT 'numero' COMMENT 'numero, par, impar, rojo, negro' AFTER partida_id,
-MODIFY COLUMN numero_apostado VARCHAR(10) NULL COMMENT 'Número específico o NULL para otros tipos';
+-- Registrar apuestas
+CALL sp_registrar_apuesta(@partida_id, 7, 1);  -- Apuesta 1 moneda al número 7
+CALL sp_registrar_apuesta(@partida_id, 20, 2); -- Apuesta 2 monedas al número 20
+CALL sp_registrar_apuesta(@partida_id, 15, 1); -- Apuesta 1 moneda al número 15
+CALL sp_registrar_apuesta(@partida_id, 8, 1);  -- Apuesta 1 moneda al número 8
+CALL sp_registrar_apuesta(@partida_id, 23, 1); -- Apuesta 1 moneda al número 23
 
--- Actualizar la tabla de Configuración para incluir multiplicadores específicos
-ALTER TABLE Configuracion
-ADD COLUMN multiplicador_color DECIMAL(3,1) NOT NULL DEFAULT 1.5 COMMENT 'Multiplicador para apuestas a color',
-ADD COLUMN multiplicador_paridad DECIMAL(3,1) NOT NULL DEFAULT 1.5 COMMENT 'Multiplicador para apuestas par/impar';
+-- Finalizar la partida
+CALL sp_finalizar_partida(@partida_id);
 
--- Actualizar la configuración existente
-UPDATE Configuracion 
-SET multiplicador_color = 1.5, 
-    multiplicador_paridad = 1.5 
-WHERE config_id = 1;
+-- Consultar el ranking
+SELECT u.nombre_usuario, r.puntaje_total, r.partidas_jugadas
+FROM Ranking r
+JOIN Usuarios u ON r.usuario_id = u.usuario_id
+ORDER BY r.puntaje_total DESC;
 
--- Eliminar el procedimiento anterior
-DROP PROCEDURE IF EXISTS sp_registrar_apuesta_con_resultado;
 
--- Crear el nuevo procedimiento almacenado mejorado
-DELIMITER //
-CREATE PROCEDURE sp_registrar_apuesta_con_resultado(
-    IN p_partida_id INT,
-    IN p_tipo_apuesta VARCHAR(20),
-    IN p_numero_apostado VARCHAR(10),
-    IN p_cantidad_apostada INT,
-    IN p_numero_resultado INT
-)
-BEGIN
-    DECLARE v_ganancia INT DEFAULT 0;
-    DECLARE v_multiplicador_numero INT;
-    DECLARE v_multiplicador_color DECIMAL(3,1);
-    DECLARE v_multiplicador_paridad DECIMAL(3,1);
-    DECLARE v_es_rojo BOOLEAN DEFAULT FALSE;
-    DECLARE v_es_par BOOLEAN DEFAULT FALSE;
-    DECLARE v_apuesta_gana BOOLEAN DEFAULT FALSE;
-    
-    -- Obtener los multiplicadores de la configuración
-    SELECT multiplicador_ganancia, multiplicador_color, multiplicador_paridad 
-    INTO v_multiplicador_numero, v_multiplicador_color, v_multiplicador_paridad
-    FROM Configuracion WHERE config_id = 1;
-    
-    -- Determinar si el número resultado es rojo
-    IF p_numero_resultado IN (1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36) THEN
-        SET v_es_rojo = TRUE;
-    END IF;
-    
-    -- Determinar si el número resultado es par (excluyendo 0 y 00)
-    IF p_numero_resultado > 0 AND p_numero_resultado < 37 AND MOD(p_numero_resultado, 2) = 0 THEN
-        SET v_es_par = TRUE;
-    END IF;
-    
-    -- Calcular si la apuesta gana según el tipo
-    CASE p_tipo_apuesta
-        WHEN 'numero' THEN
-            -- Para apuesta a número específico
-            IF p_numero_apostado IS NOT NULL AND CAST(p_numero_apostado AS UNSIGNED) = p_numero_resultado THEN
-                SET v_apuesta_gana = TRUE;
-                SET v_ganancia = p_cantidad_apostada * v_multiplicador_numero;
-            END IF;
-            
-        WHEN 'rojo' THEN
-            -- Para apuesta a rojo (0 y 00 no son rojos)
-            IF p_numero_resultado > 0 AND p_numero_resultado < 37 AND v_es_rojo = TRUE THEN
-                SET v_apuesta_gana = TRUE;
-                SET v_ganancia = FLOOR(p_cantidad_apostada * v_multiplicador_color);
-            END IF;
-            
-        WHEN 'negro' THEN
-            -- Para apuesta a negro (0 y 00 no son negros)
-            IF p_numero_resultado > 0 AND p_numero_resultado < 37 AND v_es_rojo = FALSE THEN
-                SET v_apuesta_gana = TRUE;
-                SET v_ganancia = FLOOR(p_cantidad_apostada * v_multiplicador_color);
-            END IF;
-            
-        WHEN 'par' THEN
-            -- Para apuesta a par (0 y 00 no cuentan)
-            IF v_es_par = TRUE THEN
-                SET v_apuesta_gana = TRUE;
-                SET v_ganancia = FLOOR(p_cantidad_apostada * v_multiplicador_paridad);
-            END IF;
-            
-        WHEN 'impar' THEN
-            -- Para apuesta a impar (0 y 00 no cuentan)
-            IF p_numero_resultado > 0 AND p_numero_resultado < 37 AND v_es_par = FALSE THEN
-                SET v_apuesta_gana = TRUE;
-                SET v_ganancia = FLOOR(p_cantidad_apostada * v_multiplicador_paridad);
-            END IF;
-    END CASE;
-    
-    -- Registrar la apuesta
-    INSERT INTO Apuestas (partida_id, tipo_apuesta, numero_apostado, cantidad_apostada, numero_resultado, ganancia, fecha_apuesta)
-    VALUES (p_partida_id, p_tipo_apuesta, p_numero_apostado, p_cantidad_apostada, p_numero_resultado, v_ganancia, NOW());
-    
-    -- Devolver los datos de la apuesta registrada
-    SELECT 
-        LAST_INSERT_ID() as apuesta_id,
-        p_numero_resultado as numero_resultado,
-        v_ganancia as ganancia,
-        NOW() as fecha_apuesta;
-END //
-DELIMITER ;
+--En caso de errores correr lo siguiente para los permisos de usuario
+
+GRANT EXECUTE ON PROCEDURE ruleta_americana.sp_iniciar_partida TO 'redes'@'%';
+GRANT EXECUTE ON PROCEDURE ruleta_americana.sp_registrar_apuesta TO 'redes'@'%';
+FLUSH PRIVILEGES;
+
+GRANT EXECUTE ON `ruleta_americana`.* TO 'redes'@'%';
+FLUSH PRIVILEGES;
