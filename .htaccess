@@ -1,0 +1,11 @@
+RewriteEngine On
+
+# Forzar HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Configuración para aplicaciones PHP
+DirectoryIndex index.php index.html
+
+# Permitir archivos PHP
+AddType application/x-httpd-php .php

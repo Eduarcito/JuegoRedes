@@ -22,20 +22,21 @@ class Database {
             $server_name = $_SERVER['SERVER_NAME'] ?? '';
             
             // Configuración basada en el entorno (producción o desarrollo)
-            if ($server_name == 'localhost' || $server_name == '127.0.0.1') {
+            if ($server_name == 'localhost') {
                 // Configuración para entorno local (XAMPP)
                 $this->host = "localhost";
                 $this->db_name = "ruleta_americana";
                 $this->username = "root";
                 $this->password = "";
                 $this->port = 3306;
+                
             } else {
                 // Configuración para entorno de producción (VPS)
                 // Estos valores deberías cambiarlos por los de tu VPS
-                $this->host = "nombre_servidor_vps";
+                $this->host = "localhost";
                 $this->db_name = "ruleta_americana";
-                $this->username = "usuario_vps";
-                $this->password = "password_vps";
+                $this->username = "redes2";
+                $this->password = "redes2";
                 $this->port = 3306;
             }
         } else {

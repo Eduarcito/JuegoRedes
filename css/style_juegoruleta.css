@@ -1,0 +1,194 @@
+
+    body {
+        background-color: #2a2a2a;
+        color: #fff;
+    }
+    .navbar {
+        background-color: #3d0000 !important;
+    }
+    .card {
+        background-color: #2a2a2a;
+        border: none;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        color: #FFF;
+    }
+    .btn-danger {
+        background-color: #8b0000;
+        border: none;
+    }
+    .table {
+        color: #fff;
+        background-color: #2a2a2a;
+    }
+    .table thead th {
+        background-color: #3d0000;
+        color: #fff;
+    }
+    
+    /* Estilos para la ruleta mejorada */
+    .roulette-container {
+        margin-bottom: 30px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 400px;
+    }
+    
+    .roulette-wrapper {
+        position: relative;
+        width: 350px;
+        height: 350px;
+    }
+    
+    .roulette-wheel {
+        width: 350px;
+        height: 350px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: center;
+        transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    
+    .roulette-wheel.spinning {
+        animation: spin 4s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(3600deg); }
+    }
+    
+    /* Indicador de la ruleta */
+    .roulette-indicator {
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 20px solid transparent;
+        border-right: 20px solid transparent;
+        border-top: 40px solid #FFD700;
+        z-index: 10;
+        filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
+    }
+    
+    /* Centro de la ruleta */
+    .roulette-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80px;
+        height: 80px;
+        background: radial-gradient(circle, #FFD700 0%, #B8860B 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: bold;
+        color: #000;
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        z-index: 5;
+    }
+    
+    /* Resultado de la ruleta */
+    #last-result {
+        font-size: 24px;
+        text-align: center;
+        margin: 20px 0;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .info-panel {
+        background-color: #3d0000;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        animation: fadeIn 0.5s ease-in;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Animación para los números */
+    .number-grid {
+        display: grid;
+        grid-template-columns: repeat(13, 1fr);
+        gap: 5px;
+        margin-bottom: 20px;
+    }
+    
+    .number-btn {
+        width: 100%;
+        aspect-ratio: 1;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+    
+    .number-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+    
+    .number-btn.active {
+        transform: scale(1.15);
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        border: 2px solid #FFD700;
+    }
+    
+    .zero-btn {
+        grid-column: span 3;
+        aspect-ratio: 3/1;
+    }
+
+    .list-group-flush>.list-group-item {
+    border-width: 0 0 1px;
+    color: white;
+}
+    
+    /* Animación de ganancia */
+    @keyframes winPulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+        100% { transform: scale(1); }
+    }
+    
+    .win-animation {
+        animation: winPulse 0.5s ease-in-out 3;
+    }
+    
+    /* Monedas animadas */
+    .coin-animation {
+        position: fixed;
+        font-size: 40px;
+        color: #FFD700;
+        pointer-events: none;
+        animation: coinFall 2s ease-in-out forwards;
+    }
+    
+    @keyframes coinFall {
+        0% {
+            transform: translateY(-100px) rotate(0deg);
+            opacity: 0;
+        }
+        20% {
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(100vh) rotate(720deg);
+            opacity: 0;
+        }
+    }

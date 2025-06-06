@@ -150,6 +150,51 @@ class Apuesta {
             return false;
         }
     }
+
+    // NUEVO: Método para registrar una apuesta con resultado predeterminado (actualizado para tipos de apuesta)
+public function registrarConResultado($numero_resultado, $tipo_apuesta = 'numero') {
+    try {
+        // Preparar la consulta con el nuevo SP
+        $query = "CALL sp_registrar_apuesta_con_resultado(:partida_id, :tipo_apuesta, :numero_apostado, :cantidad_apostada, :numero_resultado)";
+        $stmt = $this->conn->prepare($query);
+        
+        // Sanitizar
+        $tipo_apuesta = htmlspecialchars(strip_tags($tipo_apuesta));
+        $numero_resultado = htmlspecialchars(strip_tags($numero_resultado));
+        $this->cantidad_apostada = htmlspecialchars(strip_tags($this->cantidad_apostada));
+        
+        // Para apuestas que no son a número específico, numero_apostado será NULL
+        $numero_apostado_param = null;
+        if($tipo_apuesta === 'numero') {
+            $numero_apostado_param = htmlspecialchars(strip_tags($this->numero_apostado));
+        }
+        
+        // Vincular valores
+        $stmt->bindParam(":partida_id", $this->partida_id);
+        $stmt->bindParam(":tipo_apuesta", $tipo_apuesta);
+        $stmt->bindParam(":numero_apostado", $numero_apostado_param);
+        $stmt->bindParam(":cantidad_apostada", $this->cantidad_apostada);
+        $stmt->bindParam(":numero_resultado", $numero_resultado);
+        
+        // Ejecutar la consulta
+        if($stmt->execute()) {
+            // Obtener los datos de la apuesta registrada
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if($row) {
+                $this->apuesta_id = $row['apuesta_id'];
+                $this->numero_resultado = $row['numero_resultado'];
+                $this->ganancia = $row['ganancia'];
+                $this->fecha_apuesta = $row['fecha_apuesta'];
+            }
+            return true;
+        }
+        
+        return false;
+    } catch(PDOException $exception) {
+        echo "Error al registrar apuesta con resultado: " . $exception->getMessage();
+        return false;
+    }
+}
     
     // Método para obtener las apuestas de una partida
     public function obtenerApuestasDePartida() {
@@ -168,4 +213,3 @@ class Apuesta {
         return $stmt;
     }
 }
-

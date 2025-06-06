@@ -104,18 +104,46 @@ if(isset($_GET['action']) && $_GET['action'] == 'logout') {
         body {
             background-color: #1a1a1a;
             color: #fff;
+            overflow-x: hidden;
         }
         .navbar {
             background-color: #3d0000 !important;
+            animation: slideDown 0.5s ease-out;
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
         }
         .card {
             background-color: #2a2a2a;
             border: none;
             border-radius: 10px;
+            animation: fadeInUp 0.6s ease-out;
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(139, 0, 0, 0.3);
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         .btn-danger {
             background-color: #8b0000;
             border: none;
+            transition: all 0.3s ease;
+        }
+        .btn-danger:hover {
+            background-color: #a50000;
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(139, 0, 0, 0.5);
         }
         .btn-success {
             background-color: #006400;
@@ -129,33 +157,173 @@ if(isset($_GET['action']) && $_GET['action'] == 'logout') {
             background-color: #3d0000;
             color: #fff;
         }
-        .roulette-wheel {
+        
+        /* Ruleta animada en el home */
+        .roulette-home-container {
+            position: relative;
             width: 300px;
             height: 300px;
-            border-radius: 50%;
-            background: radial-gradient(circle, #8b0000 0%, #3d0000 100%);
             margin: 30px auto;
-            position: relative;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
-        .inner-wheel {
-            width: 80%;
-            height: 80%;
+        
+        .roulette-wheel-home {
+            width: 100%;
+            height: 100%;
+            animation: continuousSpin 20s linear infinite;
+        }
+        
+        @keyframes continuousSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .roulette-indicator-home {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 30px solid #FFD700;
+            z-index: 10;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
+        }
+        
+        .roulette-center-home {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #FFD700 0%, #B8860B 100%);
             border-radius: 50%;
-            background: radial-gradient(circle, #2a2a2a 0%, #1a1a1a 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #fff;
             font-size: 24px;
             font-weight: bold;
+            color: #000;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            z-index: 5;
+        }
+        
+        /* Animación de título */
+        h2.card-title {
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes titleGlow {
+            from { text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+            to { text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.6); }
+        }
+        
+        /* Animación para los números del ranking */
+        .table tbody tr {
+            animation: fadeIn 0.5s ease-out;
+            animation-fill-mode: both;
+        }
+        
+        .table tbody tr:nth-child(1) { animation-delay: 0.1s; }
+        .table tbody tr:nth-child(2) { animation-delay: 0.2s; }
+        .table tbody tr:nth-child(3) { animation-delay: 0.3s; }
+        .table tbody tr:nth-child(4) { animation-delay: 0.4s; }
+        .table tbody tr:nth-child(5) { animation-delay: 0.5s; }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* Medallas para el top 3 */
+        .medal {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 5px;
+            font-size: 12px;
+            text-align: center;
+            line-height: 20px;
+        }
+        
+        .gold { background: linear-gradient(45deg, #FFD700, #FFA500); }
+        .silver { background: linear-gradient(45deg, #C0C0C0, #808080); }
+        .bronze { background: linear-gradient(45deg, #CD7F32, #8B4513); }
+        
+        /* Partículas de fondo */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #FFD700;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 10s infinite linear;
+        }
+        
+        @keyframes float {
+            from {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            to {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Hover effects para los modales */
+        .modal-content {
+            animation: modalSlideIn 0.3s ease-out;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
 <body>
+    <!-- Partículas de fondo -->
+    <div class="particles" id="particles"></div>
+    
     <!-- Barra de navegación -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
         <div class="container">
@@ -215,9 +383,49 @@ if(isset($_GET['action']) && $_GET['action'] == 'logout') {
                     <div class="card-body text-center">
                         <h2 class="card-title mb-4">¡Bienvenido a la Ruleta Americana!</h2>
                         
-                        <!-- Imagen representativa de la ruleta -->
-                        <div class="roulette-wheel">
-                            <div class="inner-wheel">
+                        <!-- Ruleta animada mejorada -->
+                        <div class="roulette-home-container">
+                            <div class="roulette-indicator-home"></div>
+                            <svg class="roulette-wheel-home" viewBox="0 0 300 300">
+                                <?php
+                                // Números de la ruleta americana
+                                $numeros = [0, 28, 9, 26, 30, 11, 7, 20, 32, 17, 5, 22, 34, 15, 3, 24, 36, 13, 1, 37, 27, 10, 25, 29, 12, 8, 19, 31, 18, 6, 21, 33, 16, 4, 23, 35, 14, 2];
+                                $colores = [
+                                    0 => '#006400', 37 => '#006400',
+                                    1 => '#DC143C', 3 => '#DC143C', 5 => '#DC143C', 7 => '#DC143C', 9 => '#DC143C',
+                                    12 => '#DC143C', 14 => '#DC143C', 16 => '#DC143C', 18 => '#DC143C', 19 => '#DC143C',
+                                    21 => '#DC143C', 23 => '#DC143C', 25 => '#DC143C', 27 => '#DC143C', 30 => '#DC143C',
+                                    32 => '#DC143C', 34 => '#DC143C', 36 => '#DC143C'
+                                ];
+                                
+                                $totalNumeros = count($numeros);
+                                $anguloPorNumero = 360 / $totalNumeros;
+                                
+                                for($i = 0; $i < $totalNumeros; $i++) {
+                                    $numero = $numeros[$i];
+                                    $anguloInicio = $i * $anguloPorNumero;
+                                    $anguloFin = ($i + 1) * $anguloPorNumero;
+                                    $color = isset($colores[$numero]) ? $colores[$numero] : '#000';
+                                    
+                                    $x1 = 150 + 130 * cos(deg2rad($anguloInicio));
+                                    $y1 = 150 + 130 * sin(deg2rad($anguloInicio));
+                                    $x2 = 150 + 130 * cos(deg2rad($anguloFin));
+                                    $y2 = 150 + 130 * sin(deg2rad($anguloFin));
+                                    
+                                    $anguloMedio = ($anguloInicio + $anguloFin) / 2;
+                                    $textoX = 150 + 100 * cos(deg2rad($anguloMedio));
+                                    $textoY = 150 + 100 * sin(deg2rad($anguloMedio));
+                                    
+                                    echo "<g>";
+                                    echo "<path d='M 150 150 L $x1 $y1 A 130 130 0 0 1 $x2 $y2 Z' fill='$color' stroke='white' stroke-width='2'/>";
+                                    
+                                    $numeroMostrar = $numero == 37 ? '00' : $numero;
+                                    echo "<text x='$textoX' y='$textoY' fill='white' font-size='12' font-weight='bold' text-anchor='middle' dominant-baseline='middle' transform='rotate(" . ($anguloMedio + 90) . " $textoX $textoY)'>$numeroMostrar</text>";
+                                    echo "</g>";
+                                }
+                                ?>
+                            </svg>
+                            <div class="roulette-center-home">
                                 <span id="resultNumber">?</span>
                             </div>
                         </div>
@@ -276,14 +484,18 @@ if(isset($_GET['action']) && $_GET['action'] == 'logout') {
                                 $position = 1;
                                 while ($row = $stmt_ranking->fetch(PDO::FETCH_ASSOC)) {
                                     echo "<tr>";
-                                    echo "<td>{$position}</td>";
+                                    echo "<td>";
+                                    if($position == 1) echo '<span class="medal gold">🥇</span>';
+                                    else if($position == 2) echo '<span class="medal silver">🥈</span>';
+                                    else if($position == 3) echo '<span class="medal bronze">🥉</span>';
+                                    else echo $position;
+                                    echo "</td>";
                                     echo "<td>" . htmlspecialchars($row['nombre_usuario']) . "</td>";
                                     echo "<td>" . number_format($row['puntaje_total']) . "</td>";
                                     echo "</tr>";
                                     $position++;
                                 }
                                 
-                                // Si no hay datos en el ranking
                                 if($position == 1) {
                                     echo "<tr><td colspan='3' class='text-center'>No hay datos de ranking aún</td></tr>";
                                 }
@@ -293,7 +505,6 @@ if(isset($_GET['action']) && $_GET['action'] == 'logout') {
                     </div>
                 </div>
             </div>
-            
         </div>
     </div>
 
@@ -372,8 +583,23 @@ if(isset($_GET['action']) && $_GET['action'] == 'logout') {
     <!-- Scripts de Bootstrap y JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Script para animación simple de la ruleta
-        function simularGiro() {
+        // Crear partículas de fondo
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Script para animación de la ruleta
+        function animarNumeroAleatorio() {
             const resultElement = document.getElementById('resultNumber');
             let counter = 0;
             const interval = setInterval(() => {
@@ -384,13 +610,52 @@ if(isset($_GET['action']) && $_GET['action'] == 'logout') {
                 
                 if (counter > 20) {
                     clearInterval(interval);
+                    // Después de parar, hacer una animación de pulso
+                    resultElement.style.animation = 'pulse 0.5s ease-in-out';
+                    setTimeout(() => {
+                        resultElement.style.animation = '';
+                    }, 500);
                 }
             }, 100);
         }
         
-        // Simular giro al cargar la página
+        // Ejecutar cuando se carga la página
         document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(simularGiro, 1000);
+            // Crear partículas
+            createParticles();
+            
+            // Animar número aleatorio cada 5 segundos
+            animarNumeroAleatorio();
+            setInterval(animarNumeroAleatorio, 5000);
+            
+            // Animación de hover para las cartas
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transition = 'all 0.3s ease';
+                });
+            });
+            
+            // Validación de formularios con animación
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    const button = this.querySelector('button[type="submit"]');
+                    button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Procesando...';
+                    button.disabled = true;
+                });
+            });
+            
+            // Efecto de brillo en el botón principal
+            const mainButton = document.querySelector('.btn-danger.btn-lg');
+            if (mainButton) {
+                setInterval(() => {
+                    mainButton.style.boxShadow = '0 0 30px rgba(139, 0, 0, 0.8)';
+                    setTimeout(() => {
+                        mainButton.style.boxShadow = '0 0 15px rgba(139, 0, 0, 0.5)';
+                    }, 1000);
+                }, 2000);
+            }
             
             // Código para mostrar mensajes de debug
             <?php if($mensaje): ?>

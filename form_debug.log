@@ -109,3 +109,135 @@ Array
     [username] => Walter 
     [password] => 31011975
 )
+Array
+(
+    [action] => login
+    [username] => Eduarcito
+    [password] => 01302005
+)
+Array
+(
+    [action] => login
+    [username] => Ryan
+    [password] => najera56
+)
+Array
+(
+    [action] => register
+    [username] => Ryan
+    [email] => najeraalex285@gmail.com
+    [password] => najera56
+)
+Array
+(
+    [action] => login
+    [username] => RYAN
+    [password] => najera56
+)
+Array
+(
+    [action] => register
+    [username] => ryan
+    [email] => najeraalex285@gmail.com
+    [password] => najera56
+)
+Array
+(
+    [action] => login
+    [username] => ryan
+    [password] => najera56
+)
+Array
+(
+    [action] => login
+    [username] => ryan
+    [password] => najera56
+)
+Array
+(
+    [action] => register
+    [username] => ryan
+    [email] => najeraalex285@gmail.com
+    [password] => najera
+)
+Array
+(
+    [action] => login
+    [username] => ryan
+    [password] => najera
+)
+Array
+(
+    [action] => login
+    [username] => brian
+    [email] => brianh@gmail.com
+    [password] => brian
+)
+Array
+(
+    [action] => login
+    [username] => brian
+    [email] => brianh@gmail.com
+    [password] => brian
+)
+Array
+(
+    [action] => login
+    [username] => ryan
+    [password] => najera
+)
+Array
+(
+    [action] => apostar
+    [numero] => 37
+    [cantidad] => 1
+)
+Array
+(
+    [action] => login
+    [username] => ryan
+    [password] => najera
+)
+Array
+(
+    [action] => register
+    [username] => alex
+    [email] => alex2025@gmail.com
+    [password] => alex
+)
+Array
+(
+    [action] => login
+    [username] => alex
+    [password] => alex
+)
+Array
+(
+    [action] => login
+    [username] => ryan
+    [password] => najera
+)
+Array
+(
+    [action] => login
+    [username] => ryan
+    [password] => najera
+)
+Array
+(
+    [action] => login
+    [username] => ryan
+    [password] => najeraa
+)
+Array
+(
+    [action] => login
+    [username] => ryan
+    [password] => najera
+)
+Array
+(
+    [action] => login
+    [username] => ryan
+    [password] => najera
+)
