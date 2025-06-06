@@ -406,11 +406,11 @@ if(($jugadas_restantes <= 0 || (isset($_POST['action']) && $_POST['action'] == '
                             </li>
                             <li class="list-group-item bg-transparent border-dark">
                                 <i class="fas fa-palette me-2 text-danger"></i>
-                                Ganancia color (rojo/negro): x1.5
+                                Ganancia color (rojo/negro): x2
                             </li>
                             <li class="list-group-item bg-transparent border-dark">
                                 <i class="fas fa-divide me-2 text-success"></i>
-                                Ganancia par/impar: x1.5
+                                Ganancia par/impar: x2
                             </li>
                             <li class="list-group-item bg-transparent border-dark">
                                 <i class="fas fa-random me-2 text-primary"></i>
