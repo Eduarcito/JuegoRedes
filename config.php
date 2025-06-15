@@ -10,8 +10,8 @@ $db_config = [
     'local' => [
         'host' => 'localhost',
         'db_name' => 'ruleta_americana',
-        'username' => 'root',
-        'password' => '',
+        'username' => 'root', // Asegúrate de que este usuario tenga permisos
+        'password' => '', // Si usas 'redes', cambia aquí y en MySQL
         'port' => 3306
     ],
     
@@ -39,3 +39,15 @@ function determinarEntorno() {
 // Establecer la configuración según el entorno
 $entorno_actual = determinarEntorno();
 $db_config = $db_config[$entorno_actual];
+
+// Conectar a la base de datos usando PDO
+try {
+    $conn = new PDO(
+        "mysql:host={$db_config['host']};dbname={$db_config['db_name']};port={$db_config['port']};charset=utf8",
+        $db_config['username'],
+        $db_config['password']
+    );
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Error de conexión: " . $e->getMessage());
+}

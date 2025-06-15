@@ -241,3 +241,16 @@ Array
     [username] => ryan
     [password] => najera
 )
+Array
+(
+    [action] => register
+    [username] => Eduarcito
+    [email] => eduardoiraheta14@icloud.com
+    [password] => 0130
+)
+Array
+(
+    [action] => login
+    [username] => Eduarcito
+    [password] => 0130
+)

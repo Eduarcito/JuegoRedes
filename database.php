@@ -26,8 +26,8 @@ class Database {
                 // Configuración para entorno local (XAMPP)
                 $this->host = "localhost";
                 $this->db_name = "ruleta_americana";
-                $this->username = "redes";
-                $this->password = "redes";
+                $this->username = "root";
+                $this->password = "admin";
                 $this->port = 3306;
                 
             } else {
@@ -35,8 +35,8 @@ class Database {
                 // Estos valores deberías cambiarlos por los de tu VPS
                 $this->host = "localhost";
                 $this->db_name = "ruleta_americana";
-                $this->username = "redes";
-                $this->password = "redes";
+                $this->username = "root";
+                $this->password = "admin";
                 $this->port = 3306;
             }
         } else {

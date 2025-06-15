@@ -9,12 +9,20 @@ class Ranking {
     
     // Constructor
     public function __construct($db) {
+        if (!$db) {
+            die("Error: No se pudo conectar a la base de datos.");
+        }
         $this->conn = $db;
     }
     
     // Método para obtener el ranking global
     public function obtenerRankingGlobal($limit = 10) {
         try {
+            // Verificar que la conexión no sea null
+            if (!$this->conn) {
+                throw new PDOException("Conexión a la base de datos no establecida.");
+            }
+
             // Consulta para obtener el ranking ordenado por puntaje
             $query = "SELECT r.ranking_id, r.usuario_id, u.nombre_usuario, r.puntaje_total, r.partidas_jugadas
                     FROM " . $this->table_name . " r
@@ -37,13 +45,17 @@ class Ranking {
             file_put_contents('error_ranking.log', date('Y-m-d H:i:s') . ': ' . $exception->getMessage() . "\n", FILE_APPEND);
             
             // Devolver un objeto con 0 filas para evitar errores
-            return $this->conn->query("SELECT 1 WHERE 0");
+            return $this->conn ? $this->conn->query("SELECT 1 WHERE 0") : null;
         }
     }
     
     // Método para obtener la posición de un usuario en el ranking
     public function obtenerPosicionUsuario($usuario_id) {
         try {
+            if (!$this->conn) {
+                throw new PDOException("Conexión a la base de datos no establecida.");
+            }
+
             // Primero obtenemos el puntaje del usuario
             $query_puntaje = "SELECT puntaje_total 
                             FROM " . $this->table_name . " 
@@ -77,15 +89,18 @@ class Ranking {
             
             return $posicion;
         } catch(PDOException $exception) {
-            // Para debug, guardar el error en un archivo
             file_put_contents('error_ranking.log', date('Y-m-d H:i:s') . ': ' . $exception->getMessage() . "\n", FILE_APPEND);
-            return 0; // En caso de error, devolvemos 0
+            return 0;
         }
     }
     
     // Método para actualizar el ranking de un usuario
     public function actualizarRankingUsuario($usuario_id, $puntaje_adicional) {
         try {
+            if (!$this->conn) {
+                throw new PDOException("Conexión a la base de datos no establecida.");
+            }
+
             // Consulta para actualizar el ranking
             $query = "UPDATE " . $this->table_name . "
                      SET puntaje_total = puntaje_total + ?,
@@ -103,7 +118,6 @@ class Ranking {
             // Ejecutar la consulta
             return $stmt->execute();
         } catch(PDOException $exception) {
-            // Para debug, guardar el error en un archivo
             file_put_contents('error_ranking.log', date('Y-m-d H:i:s') . ': ' . $exception->getMessage() . "\n", FILE_APPEND);
             return false;
         }
@@ -112,6 +126,10 @@ class Ranking {
     // Método para obtener las estadísticas de un usuario
     public function obtenerEstadisticasUsuario($usuario_id) {
         try {
+            if (!$this->conn) {
+                throw new PDOException("Conexión a la base de datos no establecida.");
+            }
+
             // Consulta para obtener estadísticas
             $query = "SELECT r.puntaje_total, r.partidas_jugadas,
                            (SELECT COUNT(*) + 1 FROM " . $this->table_name . " WHERE puntaje_total > r.puntaje_total) as posicion
@@ -130,7 +148,6 @@ class Ranking {
             // Obtener el resultado
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch(PDOException $exception) {
-            // Para debug, guardar el error en un archivo
             file_put_contents('error_ranking.log', date('Y-m-d H:i:s') . ': ' . $exception->getMessage() . "\n", FILE_APPEND);
             return [
                 'puntaje_total' => 0,
